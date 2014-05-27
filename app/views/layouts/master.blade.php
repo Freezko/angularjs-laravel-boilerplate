@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>AngularJS + Laravel Boilerplate</title>
-	<link rel="stylesheet" type="text/css" href="/assets/styles/web.css" />
+	<link rel="stylesheet" type="text/css" href="/assets/lib/style.min.css" />
 </head>
 <body>
 
@@ -16,19 +16,26 @@
 					<a href="/">HOME</a>
 				</li>
 				<li>
-					<a href="/respect/">RESPECT</a>
+					<a ui-sref="respect">RESPECT</a>
+				</li>
+				<li>
+					<a href="/other">error page</a>
+				</li>
+				<li>
+					<a href="/document/45">document</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 
-	<div class="container" ng-view></div>
+	<div class="container" ui-view></div>
+	<div class="container" ui-view="info"></div>
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/json3.js"></script>
+	<![endif]-->
 
-	<script type="text/javascript" src="/assets/js/lib/jquery/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript" src="/assets/js/lib/bootstrap/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/assets/js/lib/angularjs/angular.min.js"></script>
-	<script type="text/javascript" src="/assets/js/lib/angularjs/angular-route.min.js"></script>
-	<script type="text/javascript" src="/assets/js/lib/angularjs/angular-animate.min.js"></script>
-	<script type="text/javascript" src="/assets/js/lib/requirejs/require.min.js" data-main="/app/main"></script>
+	<script type="text/javascript" src="/assets/lib/script.min.js"></script>
+	<script type="text/javascript" src="/assets/lib/require.min.js" data-main="/app/main"></script>
 </body>
 </html>
