@@ -124,7 +124,13 @@ module.exports = (grunt)->
 						expand: true
 						cwd: '<%= config.bowerDir %>/bootstrap/less'
 						src: ['bootstrap.less']
-						dest: '<%= config.libDir %>/tmp/bootstrap'
+						dest: '<%= config.libDir %>/less/bootstrap'
+					}
+					{
+						expand: true
+						cwd: '<%= config.bowerDir %>/bootstrap/less'
+						src: ['variables.less']
+						dest: '<%= config.libDir %>/less/bootstrap'
 					}
 					{
 						expand: true
@@ -178,9 +184,9 @@ module.exports = (grunt)->
 					ieCompat: true
 					yuicompress: true
 					paths: ['<%= config.libDir %>/less/bootstrap', '<%= config.libDir %>/tmp/bootstrap',
-					        '<%= config.bowerDir %>/bootstrap/less', '<%= config.assetsDir %>/less']
+					        '<%= config.bowerDir %>/bootstrap/less', '<%= config.assetsDir %>/less', '<%= config.assetsDir %>/less/bootstrap']
 				files:
-					'<%= config.libDir %>/tmp/bootstrap.css': '<%= config.libDir %>/less/bootstrap/main.less'
+					'<%= config.libDir %>/tmp/bootstrap.css': '<%= config.assetsDir %>/less/bootstrap/main.less'
 
 	# Run some tasks in parallel to speed up the build process
 		concurrent:
@@ -266,4 +272,5 @@ module.exports = (grunt)->
 	grunt.registerTask('watching', ['less', 'concat', 'cssmin', 'clean'])
 
 	grunt.registerTask('test', ['bower'])
+
 
