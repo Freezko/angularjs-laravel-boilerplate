@@ -2,7 +2,7 @@ config =
 	appName: "app"
 	path:
 		controller: "/app/controllers/"
-		view: "/app/views/"
+		view: "/views/"
 
 	ext:
 		controller: ".js"
