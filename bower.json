@@ -1,7 +1,7 @@
 {
-  "name": "admin.local",
+  "name": "angularjs-laravel-boilerplate",
   "version": "0.0.0",
-  "homepage": "admin.local",
+  "homepage": "https://github.com/Freezko/angularjs-laravel-boilerplate",
   "license": "MIT",
   "ignore": [
     "**/.*",
