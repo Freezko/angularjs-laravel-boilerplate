@@ -3,3 +3,11 @@ composer.phar
 composer.lock
 .DS_Store
 Thumbs.db
+.idea
+/public/assets
+!/public/assets.gitkeep
+/vendor
+/node_modules
+/public/app
+!/public/app/.gitkeep
+npm-debug.log
