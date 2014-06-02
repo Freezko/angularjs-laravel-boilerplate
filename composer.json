@@ -1,5 +1,5 @@
 {
-    "name": "bktz/laravel4-angularjs-starter-site",
+    "name": "freezko/laravel4-angularjs-starter-site",
     "description": "Laravel 4 AngularJS Starter Site",
     "keywords": ["laravel", "angularjs", "starter"],
 	"license": "MIT",
@@ -7,6 +7,10 @@
 		{
 			"name": "Benjamin Katznelson",
 			"homepage": "http://ca.linkedin.com/in/benikatznelson",
+			"role": "Developer"
+		},
+		{
+			"name": "Shapovalov Alexandr",
 			"role": "Developer"
 		}
 	],
@@ -19,7 +23,8 @@
 	"require-dev": {
 		"way/generators": "dev-master",
 		"mockery/mockery": "dev-master@dev",
-		"barryvdh/laravel-ide-helper": "dev-master"
+		"barryvdh/laravel-ide-helper": "dev-master",
+		"phpunit/phpunit": "3.7.*"
 	},
 	"autoload": {
 		"classmap": [

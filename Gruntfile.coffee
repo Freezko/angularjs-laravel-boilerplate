@@ -2,7 +2,7 @@
 module.exports = (grunt)->
 
 	# Load grunt tasks automatically
-	require("load-grunt-tasks")(grunt)
+	#require("load-grunt-tasks")(grunt)
 
 	# Time how long tasks take. Can help when optimizing build times
 	require('time-grunt')(grunt)
@@ -15,212 +15,75 @@ module.exports = (grunt)->
 
 	grunt.initConfig
 
-		pkg: grunt.file.readJSON('package.json')
+		#pkg: grunt.file.readJSON('package.json')
 
 		#Directories
 		config: config
 
 		clean: ['<%= config.libDir %>/tmp']
 
-		copy:
-			requirejs:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/requirejs'
-					src: ['require.js']
-					dest: '<%= config.libDir %>/js'
-				]
-
-			jquery:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/jquery/dist'
-					src: ['jquery.js']
-					dest: '<%= config.libDir %>/js'
-				]
-
-			angular:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular'
-					src: ['angular.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-			angularCookies:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-cookies'
-					src: ['angular-cookies.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			ngcookies:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-cookies'
-					src: ['angular-cookies.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			ngresource:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-resource'
-					src: ['angular-resource.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			ngrouter:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-route'
-					src: ['angular-route.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			nganimate:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-animate'
-					src: ['angular-animate.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			ngsanitize:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-sanitize'
-					src: ['angular-sanitize.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			ngstorage:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-storage/src'
-					src: ['angularLocalStorage.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			uibootstrap:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-bootstrap'
-					src: ['ui-bootstrap-tpls.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-			uirouter:
-				files: [
-					expand: true
-					cwd: '<%= config.bowerDir %>/angular-ui-router/release'
-					src: ['angular-ui-router.js']
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
+		bowercopy:
+			js:
+				options:
+					destPrefix:
+						'<%= config.libDir %>/js'
+				files:
+					'jquery.js' 			: 'jquery/dist/jquery.js'
+					'require.js' 			: 'requirejs/require.js'
+					'json3.js' 				: 'json3/lib/json3.js'
+					'html5shiv-printshiv.js': 'html5shiv/dist/html5shiv-printshiv.js'
+			ng:
+				options:
+					destPrefix:
+						'<%= config.libDir %>/js/ng'
+				files:
+					'angular.js' 			: 'angular/angular.js'
+					'angular-animate.js' 	: 'angular-animate/angular-animate.js'
+					'angular-cookies.js' 	: 'angular-cookies/angular-cookies.js'
+					'angular-resource.js' 	: 'angular-resource/angular-resource.js'
+					'angular-route.js' 		: 'angular-route/angular-route.js'
+					'angular-sanitize.js' 	: 'angular-sanitize/angular-sanitize.js'
+					'angular-ui-router.js' 	: 'angular-ui-router/release/angular-ui-router.js'
+					'angularLocalStorage.js': 'angularLocalStorage/src/angularLocalStorage.js'
 			bootstrap:
-				files: [
-					{
-						expand: true
-						cwd: '<%= config.bowerDir %>/bootstrap/less'
-						src: ['bootstrap.less']
-						dest: '<%= config.libDir %>/less/bootstrap'
-					}
-					{
-						expand: true
-						cwd: '<%= config.bowerDir %>/bootstrap/less'
-						src: ['variables.less']
-						dest: '<%= config.libDir %>/less/bootstrap'
-					}
-					{
-						expand: true
-						cwd: '<%= config.bowerDir %>/bootstrap/dist/js'
-						src: ['bootstrap.js']
-						dest: '<%= config.libDir %>/js'
-					}
-					{
-						expand: true
-						cwd: '<%= config.bowerDir %>/bootstrap/dist/fonts'
-						src: ['*']
-						dest: '<%= config.libDir %>/fonts'
-					}
-				]
+				files:
+					'<%= config.libDir %>/js/bootstrap.js' : 'bootstrap/dist/js/bootstrap.js'
+					'<%= config.libDir %>/fonts' : 'bootstrap/dist/fonts/*'
+					'<%= config.libDir %>/css/bootstrap.css' : 'bootstrap/dist/css/bootstrap.css'
 
-				iehtml5:
-					files: [
-						expand: true
-						cwd: '<%= config.bowerDir %>/html5shiv/dist'
-						src: ['*']
-						dest: '<%= config.libDir %>/js'
-					]
 
-				iejson:
-					files: [
-						expand: true
-						cwd: '<%= config.bowerDir %>/json3/lib'
-						src: ['json3.js']
-						dest: '<%= config.libDir %>/js'
-					]
-
+		less:
+			compile:
+				options:
+					ieCompat: true
+					yuicompress: true
+			files:
+				expand: true,
+				cwd: '<%= config.assetsDir %>/less'
+				src: '**/*.less'
+				dest: '<%= config.assetsDir %>/css'
+				ext: '.less.css'
 
 		concat:
 			css:
-				src: ['<%= config.libDir %>/tmp/bootstrap.css']
+				src: [
+					'<%= config.libDir %>/css/bootstrap.css'
+					'<%= config.assetsDir %>/css/main.less.css'
+					'<%= config.assetsDir %>/css/*.css'
+					'!<%= config.assetsDir %>/css/*.less.css'
+				]
 				dest: '<%= config.libDir %>/tmp/concat.css'
 			js:
 				src: [
+					'<%= config.libDir %>/js/json3.js'
+					'<%= config.libDir %>/js/html5shiv-printshiv.js'
 					'<%= config.libDir %>/js/ng/angular.js'
 					'<%= config.libDir %>/js/ng/*.js'
-					'!<%= config.libDir %>/js/ng/ui-bootstrap-tpls.js'
 					'<%= config.libDir %>/js/jquery.js'
 					'<%= config.libDir %>/js/bootstrap.js'
 				],
 				dest: '<%= config.libDir %>/tmp/concat.js'
 
-
-		less:
-			bootstrap:
-				options:
-					ieCompat: true
-					yuicompress: true
-					paths: ['<%= config.libDir %>/less/bootstrap', '<%= config.libDir %>/tmp/bootstrap',
-					        '<%= config.bowerDir %>/bootstrap/less', '<%= config.assetsDir %>/less', '<%= config.assetsDir %>/less/bootstrap']
-				files:
-					'<%= config.libDir %>/tmp/bootstrap.css': '<%= config.assetsDir %>/less/bootstrap/main.less'
-
-	# Run some tasks in parallel to speed up the build process
-		concurrent:
-			dist: [
-				'copy:styles'
-				'imagemin'
-				'bower'
-			]
-
-	# Allow the use of non-minsafe AngularJS files. Automatically makes it
-	# minsafe compatible so Uglify does not destroy the ng references
-		ngmin:
-			dist:
-				files: [
-					expand: true
-					cwd: '<%= config.libDir %>/js/ng'
-					src: '*.js'
-					dest: '<%= config.libDir %>/js/ng'
-				]
-
-		coffee:
-			regular:
-				expand: true
-				flatten: false
-				cwd: '<%= config.appDir %>-coffee'
-				src: ['**/*.coffee']
-				dest: '<%= config.appDir %>'
-				ext: '.js'
-				options:
-					bare: true
-
-
-		bower:
-			install: true
 
 		cssmin:
 			css:
@@ -237,15 +100,56 @@ module.exports = (grunt)->
 					'<%= config.libDir %>/script.min.js': ['<%= config.libDir %>/tmp/concat.js']
 					'<%= config.libDir %>/require.min.js': ['<%= config.libDir %>/js/require.js']
 
+		coffee:
+			regular:
+				expand: true
+				flatten: false
+				cwd: '<%= config.appDir %>-coffee'
+				src: ['**/*.coffee']
+				dest: '<%= config.appDir %>'
+				ext: '.js'
+				options:
+					bare: true
+
+		phpunit:
+			classes:
+				dir: 'app/tests/'
+			options:
+				bin: 'vendor/bin/phpunit'
+				colors: false
+
+
 		watch:
 			less:
-				files: ['<%= config.libDir %>/less/**/*.less', '<%= config.assetsDir %>/less']
-				tasks: ['watching']
+				files: ['<%= config.assetsDir %>/less', '<%= config.assetsDir %>/css']
+				tasks: ['css']
 			coffee:
 				files: ['<%= config.appDir %>-coffee/**/*.coffee']
 				tasks: ['newer:coffee']
-				options:
-					livereload: true
+			tests:
+			#files: ['app/controllers/*.php','app/models/*.php', 'app/tests/*.php', 'app/view/*php']
+				files: ['app/**/*.php']
+				tasks: ['phpunit']
+
+	# Run some tasks in parallel to speed up the build process
+	#	concurrent:
+	#		dist: [
+	#			'copy:styles'
+	#			'imagemin'
+	#			'bower'
+	#		]
+
+	# Allow the use of non-minsafe AngularJS files. Automatically makes it
+	# minsafe compatible so Uglify does not destroy the ng references
+	#	ngmin:
+	#		dist:
+	#			files: [
+	#				expand: true
+	#				cwd: '<%= config.libDir %>/js/ng'
+	#				src: '*.js'
+	#				dest: '<%= config.libDir %>/js/ng'
+	#			]
+
 
 		grunt.event.on 'watch', (action, filepath) ->
 			# Delete compiled .js file of deleted source .coffee file.
@@ -256,21 +160,21 @@ module.exports = (grunt)->
 					grunt.file.delete jsFile
 					grunt.log.ok 'File ' + jsFile + ' deleted'
 
-	grunt.loadNpmTasks('grunt-contrib-less')
-	grunt.loadNpmTasks('grunt-contrib-coffee')
-	grunt.loadNpmTasks('grunt-githooks')
-	grunt.loadNpmTasks('grunt-contrib-watch')
-	grunt.loadNpmTasks('grunt-contrib-cssmin')
-	grunt.loadNpmTasks('grunt-contrib-copy')
-	grunt.loadNpmTasks('grunt-contrib-clean')
-	grunt.loadNpmTasks('grunt-contrib-concat')
-	grunt.loadNpmTasks('grunt-contrib-uglify')
+	grunt.loadNpmTasks('grunt-contrib-less') #less
+	grunt.loadNpmTasks('grunt-contrib-coffee') #coffee
+	#grunt.loadNpmTasks('grunt-githooks')
+	grunt.loadNpmTasks('grunt-contrib-watch') #watch
+	grunt.loadNpmTasks('grunt-contrib-cssmin') #css-mi
+	grunt.loadNpmTasks('grunt-contrib-clean') #clean
+	grunt.loadNpmTasks('grunt-contrib-concat') 	#concat
+	grunt.loadNpmTasks('grunt-contrib-uglify') #js-min
+	grunt.loadNpmTasks('grunt-phpunit'); #phpunit
+	#grunt.loadNpmTasks('grunt-bower-task') #bower
+	grunt.loadNpmTasks('grunt-newer'); #newer files
+	grunt.loadNpmTasks('grunt-bowercopy');
 
-	grunt.loadNpmTasks('grunt-bower-task')
+	grunt.registerTask('default', ['bowercopy', 'less', 'concat', 'cssmin', 'uglify', 'coffee', 'clean'])
+	grunt.registerTask('css', ['less', 'concat', 'cssmin', 'clean'])
 
-	grunt.registerTask('default', ['bower', 'copy', 'less', 'concat', 'cssmin', 'uglify', 'coffee', 'clean'])
-	grunt.registerTask('watching', ['less', 'concat', 'cssmin', 'clean'])
-
-	grunt.registerTask('test', ['bower'])
 
 

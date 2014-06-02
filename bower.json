@@ -1,28 +1,31 @@
 {
-  "name": "angularjs-laravel-boilerplate",
-  "version": "0.0.0",
-  "homepage": "https://github.com/Freezko/angularjs-laravel-boilerplate",
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "public/assets/js/vendor",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "angular-animate": "~1.2.16",
-    "angular-bootstrap": "angular-ui/bootstrap-bower#~0.11.0",
-    "angular-cookies": "~1.2.16",
-    "angular-resource": "~1.2.16",
-    "angular-route": "~1.2.16",
-    "angular-sanitize": "~1.2.16",
-    "angular-ui-router": "~0.2.10",
-    "angularLocalStorage": "~0.1.7",
-    "bootstrap": "~3.1.1",
-    "html5shiv": "~3.7.2",
-    "json3": "~3.3.1",
-    "requirejs": "~2.1.11"
-  }
+	"name": "angularjs-laravel-boilerplate",
+	"version": "0.0.0",
+	"homepage": "https://github.com/Freezko/angularjs-laravel-boilerplate",
+	"license": "MIT",
+	"ignore": [
+		"**/.txt",
+		"node_modules",
+		"test",
+		"tests",
+		".jshintrc"
+	],
+	"dependencies": {
+		"jquery": "1.11.1",
+		"angular": "~1.2.16",
+		"angular-animate": "~1.2.16",
+		"angular-bootstrap": "angular-ui/bootstrap-bower#~0.11.0",
+		"angular-cookies": "~1.2.16",
+		"angular-resource": "~1.2.16",
+		"angular-route": "~1.2.16",
+		"angular-sanitize": "~1.2.16",
+		"angular-ui-router": "~0.2.10",
+		"angularLocalStorage": "~0.1.7",
+		"bootstrap": "~3.1.1",
+		"html5shiv": "~3.7.2",
+		"json3": "~3.3.1",
+		"requirejs": "~2.1.11"
+	}
+
+
 }
