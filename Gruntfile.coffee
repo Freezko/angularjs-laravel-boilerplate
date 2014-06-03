@@ -121,7 +121,7 @@ module.exports = (grunt)->
 
 		watch:
 			less:
-				files: ['<%= config.assetsDir %>/less', '<%= config.assetsDir %>/css']
+				files: ['<%= config.assetsDir %>/less/**/*.less', '<%= config.assetsDir %>/css/**/*.css']
 				tasks: ['css']
 			coffee:
 				files: ['<%= config.appDir %>-coffee/**/*.coffee']
