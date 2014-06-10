@@ -31,11 +31,23 @@
 	<div class="container" ui-view></div>
 	<div class="container" ui-view="info"></div>
 	<!--[if lt IE 9]>
-	<script src="assets/js/html5shiv.js"></script>
-	<script src="assets/js/json3.js"></script>
+	<script src="assets/lib/js/html5shiv.js"></script>
+	<script src="assets/lib/json3.js"></script>
 	<![endif]-->
 
-	<script type="text/javascript" src="/assets/lib/script.min.js"></script>
+	<!-- build:js /assets/lib/script.min.js -->
+	<script type="text/javascript" src="/assets/lib/js/ng/angular.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angular-animate.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angular-cookies.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angularLocalStorage.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angular-resource.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angular-route.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angular-sanitize.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/ng/angular-ui-router.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/jquery.js"></script>
+	<script type="text/javascript" src="/assets/lib/js/bootstrap.js"></script>
+	<!-- endbuild -->
+
 	<script type="text/javascript" src="/assets/lib/require.min.js" data-main="/app/main"></script>
 </body>
 </html>

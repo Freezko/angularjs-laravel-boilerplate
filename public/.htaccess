@@ -1,4 +1,4 @@
-setEnv APP_ENV development
+setEnv APP_ENV local
 
 <IfModule mod_rewrite.c>
 	<IfModule mod_negotiation.c>

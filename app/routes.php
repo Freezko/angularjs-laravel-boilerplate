@@ -16,15 +16,20 @@ Blade::setContentTags('[[', ']]'); 		// for variables and all things Blade
 Blade::setEscapedContentTags('[[[', ']]]'); 	// for escaped data
 
 
-
-Route::get('views/{path}.html', function($path)
+#если запросили view (Angular)
+Route::get('views/{path}.{extension}', function($path,$extension)
 {
 
 	if(strpos($path,'./') !== false){
 		Redirect::to('/');
 	}
 	return View::make( 'ng/' . $path );
-});
+
+})->where('extension', 'php|html');
+
+#index test controller
+Route::any( '/', 'IndexController@index');
+
 
 Route::any( '{all}', function( $uri ) {
 	return View::make( 'layouts.master' );

@@ -33,7 +33,7 @@
     "grunt-ngmin": "~0.0.2",
     "grunt-phpunit": "^0.3.3",
     "grunt-rev": "~0.1.0",
-    "grunt-usemin": "~2.0.0",
+    "grunt-usemin": "^2.1.1",
     "karma": "^0.12.0",
     "karma-chrome-launcher": "~0.1.2",
     "karma-coffee-preprocessor": "~0.1",

@@ -11,3 +11,5 @@ Thumbs.db
 /public/app
 !/public/app/.gitkeep
 npm-debug.log
+/public/app/views-dist/layouts/
+!/public/app/views-dist/layouts/.gitkeep

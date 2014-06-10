@@ -7,6 +7,13 @@ module.exports = (grunt)->
 	# Time how long tasks take. Can help when optimizing build times
 	require('time-grunt')(grunt)
 
+	#read env from .htaccess
+	env = grunt.file.read('public/.htaccess').match(/setEnv\sAPP_ENV\s(.*)\s/im)[1];
+
+	if env not in ['production', 'local']
+		grunt.log.error('env is bad');
+		return;
+
 	config =
 		bowerDir: 'public/assets/lib/js/vendor'
 		libDir: 'public/assets/lib'
@@ -20,7 +27,7 @@ module.exports = (grunt)->
 		#Directories
 		config: config
 
-		clean: ['<%= config.libDir %>/tmp']
+		clean: ['<%= config.libDir %>/tmp', '.tmp']
 
 		bowercopy:
 			js:
@@ -64,25 +71,26 @@ module.exports = (grunt)->
 				dest: '<%= config.assetsDir %>/css'
 				ext: '.less.css'
 
-		concat:
-			css:
-				src: [
-					'<%= config.libDir %>/css/bootstrap.css'
-					'<%= config.assetsDir %>/css/main.less.css'
-					'<%= config.assetsDir %>/css/*.css'
-					'!<%= config.assetsDir %>/css/*.less.css'
-				]
-				dest: '<%= config.libDir %>/tmp/concat.css'
-			js:
-				src: [
-					'<%= config.libDir %>/js/json3.js'
-					'<%= config.libDir %>/js/html5shiv-printshiv.js'
-					'<%= config.libDir %>/js/ng/angular.js'
-					'<%= config.libDir %>/js/ng/*.js'
-					'<%= config.libDir %>/js/jquery.js'
-					'<%= config.libDir %>/js/bootstrap.js'
-				],
-				dest: '<%= config.libDir %>/tmp/concat.js'
+#		concat:
+#			css:
+#				src: [
+#					'!<%= config.assetsDir %>/css/*.less.css'
+#					'<%= config.assetsDir %>/css/main.less.css'
+#					'<%= config.libDir %>/css/bootstrap.css'
+#					'<%= config.assetsDir %>/css/*.css'
+#
+#				]
+#				dest: '<%= config.libDir %>/tmp/concat.css'
+#			js:
+#				src: [
+#					'<%= config.libDir %>/js/json3.js'
+#					'<%= config.libDir %>/js/html5shiv-printshiv.js'
+#					'<%= config.libDir %>/js/ng/angular.js'
+#					'<%= config.libDir %>/js/ng/*.js'
+#					'<%= config.libDir %>/js/jquery.js'
+#					'<%= config.libDir %>/js/bootstrap.js'
+#				],
+#				dest: '<%= config.libDir %>/tmp/concat.js'
 
 
 		cssmin:
@@ -92,13 +100,13 @@ module.exports = (grunt)->
 				files:
 					'<%= config.libDir %>/style.min.css': ['<%= config.libDir %>/tmp/concat.css']
 
-		uglify:
-			options:
-				preserveComments: false
-			my_target:
-				files:
-					'<%= config.libDir %>/script.min.js': ['<%= config.libDir %>/tmp/concat.js']
-					'<%= config.libDir %>/require.min.js': ['<%= config.libDir %>/js/require.js']
+#		uglify:
+#			options:
+#				preserveComments: false
+#			my_target:
+#				files:
+#					'<%= config.libDir %>/script.min.js': ['<%= config.libDir %>/tmp/concat.js']
+#					'<%= config.libDir %>/require.min.js': ['<%= config.libDir %>/js/require.js']
 
 		coffee:
 			regular:
@@ -118,6 +126,31 @@ module.exports = (grunt)->
 				bin: 'vendor/bin/phpunit'
 				colors: false
 
+
+		useminPrepare:
+			html: ['app/views/layouts/{,*/}*.php']
+
+			options:
+				dest: 'public/assets/lib/'
+				root: 'public/'
+				flow:
+					html:
+						steps:
+							js: ['concat', 'uglifyjs']
+						post: {}
+
+		copy:
+			dist:
+				files: [
+					expand: true
+					dot: true
+					cwd: 'app/views/layouts'
+					dest: 'app/views-dist/layouts'
+					src: ['{,*/}*.php']
+				]
+
+		usemin:
+			html: ['app/views-dist/layouts/{,*/}*.php']
 
 		watch:
 			less:
@@ -162,6 +195,7 @@ module.exports = (grunt)->
 
 	grunt.loadNpmTasks('grunt-contrib-less') #less
 	grunt.loadNpmTasks('grunt-contrib-coffee') #coffee
+	grunt.loadNpmTasks('grunt-contrib-copy') #copy
 	#grunt.loadNpmTasks('grunt-githooks')
 	grunt.loadNpmTasks('grunt-contrib-watch') #watch
 	grunt.loadNpmTasks('grunt-contrib-cssmin') #css-mi
@@ -172,9 +206,11 @@ module.exports = (grunt)->
 	#grunt.loadNpmTasks('grunt-bower-task') #bower
 	grunt.loadNpmTasks('grunt-newer'); #newer files
 	grunt.loadNpmTasks('grunt-bowercopy');
+	grunt.loadNpmTasks('grunt-usemin');
 
 	grunt.registerTask('default', ['bowercopy', 'less', 'concat', 'cssmin', 'uglify', 'coffee', 'clean'])
 	grunt.registerTask('css', ['less', 'concat', 'cssmin', 'clean'])
+	grunt.registerTask('test', ['useminPrepare','concat',  'uglify','copy:dist', 'usemin'])
 
 
 
