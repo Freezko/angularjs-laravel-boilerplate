@@ -15,10 +15,24 @@ module.exports = (grunt)->
 		return;
 
 	config =
-		bowerDir: 'public/assets/lib/js/vendor'
-		libDir: 'public/assets/lib'
-		assetsDir: 'public/assets'
-		appDir: 'public/app'
+		base				: 'public'
+		bower				: 'public/bower'
+		lib					: 'public/lib'
+
+		app:
+			base			: 'public/app'
+			assets			: 'public/app/assets'
+			ng				: 'public/app/ng'
+
+		dist:
+			base			: 'public/dist'
+			assets			: 'public/dist/assets'
+			ng				: 'public/dist/ng'
+
+		php:
+			layouts 		: 'app/views/layouts'
+			layoutsDist		: 'app/views-dist/layouts'
+
 
 	grunt.initConfig
 
@@ -27,13 +41,19 @@ module.exports = (grunt)->
 		#Directories
 		config: config
 
-		clean: ['<%= config.libDir %>/tmp', '.tmp']
-
+		clean: [
+				'<%= config.app.base %>/.tmp'
+				'.tmp'
+				'<%= config.dist.base %>'
+				'<%= config.lib %>'
+				'<%= config.php.layoutsDist %>'
+				]
+		#инсталируем библиотеки и копируем в папку main файлы
 		bowercopy:
 			js:
 				options:
 					destPrefix:
-						'<%= config.libDir %>/js'
+						'<%= config.base %>/lib/js'
 				files:
 					'jquery.js' 			: 'jquery/dist/jquery.js'
 					'require.js' 			: 'requirejs/require.js'
@@ -42,7 +62,7 @@ module.exports = (grunt)->
 			ng:
 				options:
 					destPrefix:
-						'<%= config.libDir %>/js/ng'
+						'<%= config.base %>/lib/js/ng'
 				files:
 					'angular.js' 			: 'angular/angular.js'
 					'angular-animate.js' 	: 'angular-animate/angular-animate.js'
@@ -53,12 +73,15 @@ module.exports = (grunt)->
 					'angular-ui-router.js' 	: 'angular-ui-router/release/angular-ui-router.js'
 					'angularLocalStorage.js': 'angularLocalStorage/src/angularLocalStorage.js'
 			bootstrap:
+				options:
+					destPrefix:
+						'<%= config.base %>/lib/'
 				files:
-					'<%= config.libDir %>/js/bootstrap.js' : 'bootstrap/dist/js/bootstrap.js'
-					'<%= config.libDir %>/fonts' : 'bootstrap/dist/fonts/*'
-					'<%= config.libDir %>/css/bootstrap.css' : 'bootstrap/dist/css/bootstrap.css'
+					'js/bootstrap.js' : 'bootstrap/dist/js/bootstrap.js'
+					'fonts' : 'bootstrap/dist/fonts/*'
+					'css/bootstrap.css' : 'bootstrap/dist/css/bootstrap.css'
 
-
+		#компилируем less
 		less:
 			compile:
 				options:
@@ -66,58 +89,86 @@ module.exports = (grunt)->
 					yuicompress: true
 			files:
 				expand: true,
-				cwd: '<%= config.assetsDir %>/less'
+				cwd: '<%= config.app.assets %>/less'
 				src: '**/*.less'
-				dest: '<%= config.assetsDir %>/css'
+				dest: '<%= config.dist.assets %>/less'
 				ext: '.less.css'
 
-#		concat:
-#			css:
-#				src: [
-#					'!<%= config.assetsDir %>/css/*.less.css'
-#					'<%= config.assetsDir %>/css/main.less.css'
-#					'<%= config.libDir %>/css/bootstrap.css'
-#					'<%= config.assetsDir %>/css/*.css'
-#
-#				]
-#				dest: '<%= config.libDir %>/tmp/concat.css'
-#			js:
-#				src: [
-#					'<%= config.libDir %>/js/json3.js'
-#					'<%= config.libDir %>/js/html5shiv-printshiv.js'
-#					'<%= config.libDir %>/js/ng/angular.js'
-#					'<%= config.libDir %>/js/ng/*.js'
-#					'<%= config.libDir %>/js/jquery.js'
-#					'<%= config.libDir %>/js/bootstrap.js'
-#				],
-#				dest: '<%= config.libDir %>/tmp/concat.js'
-
-
-		cssmin:
-			css:
-				options:
-					keepSpecialComments: 0
-				files:
-					'<%= config.libDir %>/style.min.css': ['<%= config.libDir %>/tmp/concat.css']
-
-#		uglify:
-#			options:
-#				preserveComments: false
-#			my_target:
-#				files:
-#					'<%= config.libDir %>/script.min.js': ['<%= config.libDir %>/tmp/concat.js']
-#					'<%= config.libDir %>/require.min.js': ['<%= config.libDir %>/js/require.js']
-
+		#компилируем coffee
 		coffee:
 			regular:
 				expand: true
 				flatten: false
-				cwd: '<%= config.appDir %>-coffee'
+				cwd: '<%= config.app.ng %>'
 				src: ['**/*.coffee']
-				dest: '<%= config.appDir %>'
+				dest: '<%= config.dist.ng %>'
 				ext: '.js'
 				options:
 					bare: true
+
+
+		#copy all layouts  to dist folder and JS CSS files
+		copy:
+			dist:
+				files: [
+					{
+						expand: true
+						dot: true
+						cwd: '<%= config.php.layouts %>'
+						dest: '<%= config.php.layoutsDist %>'
+						src: ['{,*/}*.php']
+					}
+					{
+						expand: true
+						dot: true
+						cwd: '<%= config.app.assets %>/css'
+						dest: '<%= config.dist.assets %>/css'
+						src: ['{,*/}*']
+					}
+					{
+						expand: true
+						dot: true
+						cwd: '<%= config.app.assets %>/js'
+						dest: '<%= config.dist.assets %>/js'
+						src: ['{,*/}*']
+					}
+				]
+
+		#подготавливаем файлы для конкатинации и минификации прописанные в layouts
+		useminPrepare:
+			html: ['<%= config.php.layouts %>/{,*/}*.php']
+
+			options:
+				dest: 'public/'
+				root: 'public/'
+				flow:
+					html:
+						steps:
+							js: ['concat', 'uglifyjs']
+							css: ['concat', 'cssmin']
+						post: {}
+
+		#минифицируем сами require.js
+		uglify:
+			options:
+				preserveComments: false
+			require:
+				files:
+					'<%= config.lib %>/js/require.min.js': ['<%= config.lib %>/js/require.js']
+
+
+		# Renames files for browser caching purposes
+		rev:
+			dist:
+				files:
+					src: ['lib/**/*.min.{js,css}']
+
+		#convert dist layouts
+		usemin:
+			html: ['app/views-dist/layouts/{,*/}*.php']
+			options:
+				assetsDirs: ['public/']
+
 
 		phpunit:
 			classes:
@@ -127,71 +178,43 @@ module.exports = (grunt)->
 				colors: false
 
 
-		useminPrepare:
-			html: ['app/views/layouts/{,*/}*.php']
-
-			options:
-				dest: 'public/assets/lib/'
-				root: 'public/'
-				flow:
-					html:
-						steps:
-							js: ['concat', 'uglifyjs']
-						post: {}
-
-		copy:
-			dist:
-				files: [
-					expand: true
-					dot: true
-					cwd: 'app/views/layouts'
-					dest: 'app/views-dist/layouts'
-					src: ['{,*/}*.php']
-				]
-
-		usemin:
-			html: ['app/views-dist/layouts/{,*/}*.php']
-
 		watch:
 			less:
-				files: ['<%= config.assetsDir %>/less/**/*.less', '<%= config.assetsDir %>/css/**/*.css']
-				tasks: ['css']
+				files: ['<%= config.app.assets %>/less/**/*.less']
+				tasks: ['newer:less']
+			copydist:
+				files: ['<%= config.app.assets %>/css/**/*.css', '<%= config.app.assets %>/js/**/*.js']
+				tasks: ['newer:copy']
+			layouts:
+				files: ['<%= config.php.layouts %>/**/*.php']
+				tasks: ['newer:copy']
 			coffee:
-				files: ['<%= config.appDir %>-coffee/**/*.coffee']
+				files: ['<%= config.app.ng %>/**/*.coffee']
 				tasks: ['newer:coffee']
 			tests:
 			#files: ['app/controllers/*.php','app/models/*.php', 'app/tests/*.php', 'app/view/*php']
 				files: ['app/**/*.php']
 				tasks: ['phpunit']
 
-	# Run some tasks in parallel to speed up the build process
-	#	concurrent:
-	#		dist: [
-	#			'copy:styles'
-	#			'imagemin'
-	#			'bower'
-	#		]
-
-	# Allow the use of non-minsafe AngularJS files. Automatically makes it
-	# minsafe compatible so Uglify does not destroy the ng references
-	#	ngmin:
-	#		dist:
-	#			files: [
-	#				expand: true
-	#				cwd: '<%= config.libDir %>/js/ng'
-	#				src: '*.js'
-	#				dest: '<%= config.libDir %>/js/ng'
-	#			]
+		 #Run some tasks in parallel to speed up the build process
+#		concurrent:
+#			dist: [
+#				'bowercopy'
+#				'less'
+#				'coffee'
+#				'copy'
+#			]
 
 
 		grunt.event.on 'watch', (action, filepath) ->
 			# Delete compiled .js file of deleted source .coffee file.
 			if action == 'deleted'
-				filepath = filepath.replace "#{config.appDir}-coffee", ''
-				jsFile = "#{config.appDir}" + filepath.replace /\.coffee$/, '.js'
-				if grunt.file.exists jsFile
-					grunt.file.delete jsFile
-					grunt.log.ok 'File ' + jsFile + ' deleted'
+				File = filepath.replace "#{config.app.base}", "#{config.dist.base}"
+				File = File.replace /\.coffee$/, '.js'
+				File = File.replace /\.less$/, '.less.css'
+				if grunt.file.exists File
+					grunt.file.delete File
+					grunt.log.ok 'File ' + File + ' deleted'
 
 	grunt.loadNpmTasks('grunt-contrib-less') #less
 	grunt.loadNpmTasks('grunt-contrib-coffee') #coffee
@@ -203,14 +226,17 @@ module.exports = (grunt)->
 	grunt.loadNpmTasks('grunt-contrib-concat') 	#concat
 	grunt.loadNpmTasks('grunt-contrib-uglify') #js-min
 	grunt.loadNpmTasks('grunt-phpunit'); #phpunit
-	#grunt.loadNpmTasks('grunt-bower-task') #bower
+	#grunt.loadNpmTasks('grunt-concurrent');
 	grunt.loadNpmTasks('grunt-newer'); #newer files
 	grunt.loadNpmTasks('grunt-bowercopy');
 	grunt.loadNpmTasks('grunt-usemin');
+	grunt.loadNpmTasks('grunt-rev');
 
-	grunt.registerTask('default', ['bowercopy', 'less', 'concat', 'cssmin', 'uglify', 'coffee', 'clean'])
-	grunt.registerTask('css', ['less', 'concat', 'cssmin', 'clean'])
-	grunt.registerTask('test', ['useminPrepare','concat',  'uglify','copy:dist', 'usemin'])
+
+	grunt.registerTask('production', ['clean','bowercopy', 'less', 'coffee', 'copy', 'useminPrepare', 'concat', 'uglify', 'cssmin','rev', 'usemin'])
+	grunt.registerTask('dev', ['clean','bowercopy', 'less', 'coffee', 'copy',  'uglify'])
+
+	grunt.registerTask('default', ['production'])
 
 
 
